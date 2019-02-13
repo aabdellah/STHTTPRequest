@@ -238,11 +238,6 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
 
 + (void)addCookieToSharedCookiesStorage:(NSHTTPCookie *)cookie {
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-    
-#if DEBUG
-    NSHTTPCookie *readCookie = [[[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies] lastObject];
-    NSAssert(readCookie, @"cannot read any cookie after adding one");
-#endif
 }
 
 - (void)addCookie:(NSHTTPCookie *)cookie {

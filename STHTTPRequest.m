@@ -794,18 +794,21 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     NSURLRequest *request = [self prepareURLRequest];
     
     NSURLSessionConfiguration *sessionConfiguration = nil;
-    
-    if(_useUploadTaskInBackground) {
-        NSString *backgroundSessionIdentifier = [[NSProcessInfo processInfo] globallyUniqueString];
-        if ([[NSURLSessionConfiguration class] respondsToSelector:@selector(backgroundSessionConfigurationWithIdentifier:)]) {
-            // iOS 8+
-            sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:backgroundSessionIdentifier];
-        } else {
-            // iOS 7
-            sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-        }
+    if (self.sessionConfiguration) {
+        sessionConfiguration = self.sessionConfiguration;
     } else {
-        sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        if(_useUploadTaskInBackground) {
+            NSString *backgroundSessionIdentifier = [[NSProcessInfo processInfo] globallyUniqueString];
+            if ([[NSURLSessionConfiguration class] respondsToSelector:@selector(backgroundSessionConfigurationWithIdentifier:)]) {
+                // iOS 8+
+                sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:backgroundSessionIdentifier];
+            } else {
+                // iOS 7
+                sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+            }
+        } else {
+            sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        }
     }
     
     sessionConfiguration.allowsCellularAccess = YES;
